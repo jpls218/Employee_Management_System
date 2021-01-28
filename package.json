@@ -1,8 +1,8 @@
 {
-  "name": "Employee_Management_System",
+  "name": "employee_management_system",
   "version": "1.0.0",
   "description": "Allows the user to create a display a list of employees",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

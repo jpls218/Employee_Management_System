@@ -18,7 +18,7 @@ function viewOptions() {
                 name: "item",
                 type: "list",
                 message: "What would you like to do?",
-                choices: ['View all Employees', 'View all Roles', 'View all Departments', 'Add New Employee', 'Add New Role', 'Add New Department', 'Update Employee', 'Exit']
+                choices: ['View all Employees', 'View all Roles', 'View all Departments', 'Add New Employee', 'Add New Role', 'Add New Department', 'Update Employee Role', 'Exit']
             }
         ])
         .then(function(answer) {
@@ -39,10 +39,10 @@ function viewOptions() {
                     return addNewRole();
 
                 case 'Add New Department':
-                    return addNewDeparment();
+                    return addNewDepartment();
 
-                case 'Update Employee':
-                    return updateEmployee();
+                case 'Update Employee Role':
+                    return updateRole();
                     
                 case 'EXIT':
                     return connection.end();
@@ -118,57 +118,114 @@ function addNewEmployee(){
                 manager_id: answer.manager_id
             }, function(err){
                 if(err) throw err;
-                console.log("yay!");
+                console.log("You've added a new employee!");
                 viewOptions();
             }
         )
         })
 
 };
-function updateEmployee(){
+function addNewRole(){
     inquirer
         .prompt([
             {
-                name: "first_name",
+                name: "role",
                 type: "input",
-                message: "What is the first name of the employee you would like updated?"
+                message: "What is the name of the role you would like to add?"
             },
-            {
-            
-                name: "last_name",
-                type: "input",
-                message: "What is the last name of the employee you would like updated?"
-        
-            },
-            {
-                name: "role_id",
-                type: "input",
-                message: "What is the role of the employee you would like updated?",
-                validate: function(value) {
-                    if (isNaN(value) === false) {
-                        return true;
-                    }
-                },
-            },
-            {
-                name: "manager_id",
-                type: "input",
-                message: "What is the name of the manager of the employee you would like updated?"
-            },
+           
         ])
         .then(function(answer) {
-            connection.query("UPDATE employee SET ?",
+            connection.query("INSERT INTO role SET ?",
             {
-                first_name: answer.first_name, 
-                last_name: answer.last_name,
-                role_id: answer.role_id,
-                manager_id: answer.manager_id
+                title: answer.title,
+                salary: answer.salary,
+                department_id: answer.department_id
             }, function(err){
                 if(err) throw err;
-                console.log("yay!");
+                console.log("You've added a new job role!");
                 viewOptions();
             }
         )
         })
 
+};
+function addNewDepartment(){
+    inquirer
+        .prompt([
+            {
+                name: "role",
+                type: "input",
+                message: "What is the name of the department you would like to add?"
+            },
+           
+        ])
+        .then(function(answer) {
+            connection.query("INSERT INTO department SET ?",
+            {
+                name: answer.role
+                
+            }, function(err){
+                if(err) throw err;
+                console.log("You've added the new department!");
+                viewOptions();
+            }
+        )
+        })
+
+};
+function updateRole(){
+    connection.query("SELECT * FROM role", function(err, results) {
+        if (err) throw err;
+    inquirer
+        .prompt([
+            {
+            
+                name: "fname",
+                type: "input",
+                message: "What is the first name of the employee you would like updated?"
+        
+            },
+            {
+            
+                name: "lname",
+                type: "input",
+                message: "What is the last name of the employee you would like updated?"
+        
+            },
+            {
+                name: "role",
+                type: "list",
+                message: "Which employee's role would you like updated?",
+                choices: function() {
+                    var choiceArray = [];
+                    for (var i = 0; i < results.length; i++) {
+                      choiceArray.push(results[i].title);
+                    }
+                    return choiceArray;
+                  },
+            },
+            
+           
+        ])
+        .then(function(answer) {
+            var chosenRole;
+            for (var i = 0; i < results.length; i++) {
+                if (results[i].title === answer.role) {
+                    chosenRole = results[i].id;
+                }
+            }
+            connection.query("UPDATE employee SET role_id=? WHERE first_name = ? AND last_name = ?",
+            [
+                chosenRole,
+                answer.fname,
+                answer.lname 
+            ], function(err){
+                if(err) throw err;
+                console.log("You've updated this employee's role!");
+                viewOptions();
+            }
+        )
+        })
+    })
 };

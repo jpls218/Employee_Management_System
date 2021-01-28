@@ -1,7 +1,5 @@
 const inquirer = require('inquirer');
 const logo = require('asciiart-logo');
-const { start } = require('repl');
-const db = require('./db');
 const connection = require('./db/connection');
 require("console.table");
 

@@ -119,6 +119,7 @@ function addNewEmployee(){
             }, function(err){
                 if(err) throw err;
                 console.log("You've added a new employee!");
+                console.table(answer);
                 viewOptions();
             }
         )
@@ -129,9 +130,19 @@ function addNewRole(){
     inquirer
         .prompt([
             {
-                name: "role",
+                name: "title",
                 type: "input",
-                message: "What is the name of the role you would like to add?"
+                message: "What is the title of the role you would like to add?"
+            },
+            {
+                name: "salary",
+                type: "input",
+                message: "What is the salary of the role you would like to add?"
+            },
+            {
+                name: "department_id",
+                type: "input",
+                message: "What is the department of the role you would like to add?"
             },
            
         ])
@@ -144,6 +155,7 @@ function addNewRole(){
             }, function(err){
                 if(err) throw err;
                 console.log("You've added a new job role!");
+                console.table(answer);
                 viewOptions();
             }
         )
@@ -168,6 +180,7 @@ function addNewDepartment(){
             }, function(err){
                 if(err) throw err;
                 console.log("You've added the new department!");
+                console.table(answer);
                 viewOptions();
             }
         )
@@ -180,23 +193,19 @@ function updateRole(){
     inquirer
         .prompt([
             {
-            
                 name: "fname",
                 type: "input",
                 message: "What is the first name of the employee you would like updated?"
-        
             },
             {
-            
                 name: "lname",
                 type: "input",
                 message: "What is the last name of the employee you would like updated?"
-        
             },
             {
                 name: "role",
                 type: "list",
-                message: "Which employee's role would you like updated?",
+                message: "What is the updated role for this employee?",
                 choices: function() {
                     var choiceArray = [];
                     for (var i = 0; i < results.length; i++) {
@@ -205,8 +214,6 @@ function updateRole(){
                     return choiceArray;
                   },
             },
-            
-           
         ])
         .then(function(answer) {
             var chosenRole;
@@ -223,6 +230,7 @@ function updateRole(){
             ], function(err){
                 if(err) throw err;
                 console.log("You've updated this employee's role!");
+                console.table(answer);
                 viewOptions();
             }
         )
